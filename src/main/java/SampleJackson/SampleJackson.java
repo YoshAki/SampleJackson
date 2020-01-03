@@ -3,13 +3,39 @@
  */
 package SampleJackson;
 
+import java.io.IOException;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class SampleJackson {
 	public static void main(String[] args) {
 		SampleJackson sample = new SampleJackson();
         System.out.println(sample.getMessage());
+
+        String testJson = "{\"time\":20200103, \"DomainName\":\"www.devyosh\",\"EgressTotal\":100 }";
+        sample.convertToObject(testJson);
     }
 
     public String getMessage() {
         return "Sample!";
+    }
+
+    // JsonからJavaオブジェクトへの変換
+    public Invoice convertToObject(String jsonData) {
+    	ObjectMapper mapper = new ObjectMapper();
+    	Invoice invoice = new Invoice();
+		try {
+			// JSONからJavaオブジェクトに変換
+			invoice = mapper.readValue(jsonData, Invoice.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return invoice;
     }
 }

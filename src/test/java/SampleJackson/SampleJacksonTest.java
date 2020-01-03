@@ -12,5 +12,19 @@ public class SampleJacksonTest {
         SampleJackson classUnderTest = new SampleJackson();
         assertEquals("Sample!", classUnderTest.getMessage());
     }
+
+    @Test public void testConvertToObject() {
+        SampleJackson classUnderTest = new SampleJackson();
+        // Estimate
+        Invoice invoice = new Invoice();
+        invoice.setCreateDate("20200103");
+        invoice.setDomainName("www.devyosh");
+        invoice.setEgressTotal(100);
+
+        // Actual
+        String testJson = "{\"time\":20200103, \"DomainName\":\"www.devyosh\",\"EgressTotal\":100 }";
+
+        assertEquals(invoice.getCreateDate(), classUnderTest.convertToObject(testJson).getCreateDate());
+    }
 }
 
