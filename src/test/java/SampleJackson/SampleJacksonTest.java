@@ -13,3 +13,4 @@ public class SampleJacksonTest {
         assertEquals("Sample!", classUnderTest.getMessage());
     }
 }
+
