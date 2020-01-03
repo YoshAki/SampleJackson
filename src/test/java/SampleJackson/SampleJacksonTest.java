@@ -10,7 +10,7 @@ import org.junit.Test;
 public class SampleJacksonTest {
     @Test public void testSomeLibraryMethod() {
         SampleJackson classUnderTest = new SampleJackson();
-        assertEquals("Sample!", classUnderTest.getMessage());
+        assertEquals("Start Project!!", classUnderTest.getMessage());
     }
 
     @Test public void testConvertToObject() {
