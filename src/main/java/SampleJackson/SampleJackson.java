@@ -4,6 +4,12 @@
 package SampleJackson;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -14,8 +20,20 @@ public class SampleJackson {
 		SampleJackson sample = new SampleJackson();
         System.out.println(sample.getMessage());
 
-        String testJson = "{\"time\":20200103, \"DomainName\":\"www.devyosh\",\"EgressTotal\":100 }";
-        sample.convertToObject(testJson);
+        // ファイル読み込み
+        String jsonListData = new String();
+        Path file = Paths.get("src/main/resources/log.json");
+        try {
+			jsonListData = Files.readString(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        List<Invoice> invoiceList = sample.convertToListObject(jsonListData);
+
+        // 日付を出力
+        for (Invoice invoice : invoiceList) {
+            System.out.println(invoice.getCreateDate());
+        }
     }
 
     public String getMessage() {
@@ -37,5 +55,22 @@ public class SampleJackson {
 			e.printStackTrace();
 		}
 		return invoice;
+    }
+
+    // JsonListからJavaオブジェクトリストへの変換
+    public List<Invoice> convertToListObject(String jsonListData) {
+    	ObjectMapper mapper = new ObjectMapper();
+    	List<Invoice> invoiceList = new ArrayList<Invoice>();
+		try {
+			// JSONからJavaオブジェクトの配列に変換
+			invoiceList = Arrays.asList(mapper.readValue(jsonListData, Invoice[].class));
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return invoiceList;
     }
 }
