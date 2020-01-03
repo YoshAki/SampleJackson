@@ -9,7 +9,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -19,6 +22,8 @@ public class SampleJackson {
 	public static void main(String[] args) {
 		SampleJackson sample = new SampleJackson();
         System.out.println(sample.getMessage());
+
+        System.out.println("*****jsonからJavaオブジェクトへのシリアライズ*****");
 
         // ファイル読み込み
         String jsonListData = new String();
@@ -34,10 +39,20 @@ public class SampleJackson {
         for (Invoice invoice : invoiceList) {
             System.out.println(invoice.getCreateDate());
         }
+
+        System.out.println("*****集計開始*****");
+
+        Map<String,Integer> aggregateResult = sample.summary(invoiceList);
+
+        // 集約して結果を出力
+		for (Entry<String, Integer> result : aggregateResult.entrySet()) {
+			System.out.println(result.getKey());
+			System.out.println(result.getValue());
+		}
     }
 
     public String getMessage() {
-        return "Sample!";
+        return "Start Project!!";
     }
 
     // JsonからJavaオブジェクトへの変換
@@ -72,5 +87,18 @@ public class SampleJackson {
 			e.printStackTrace();
 		}
 		return invoiceList;
+    }
+
+    // 集約して日付をkey、EgressTotalをvalueとするようなHashMapを返す
+    public Map<String, Integer> summary(List<Invoice> invoiceList){
+    	Map<String, Integer> map = new LinkedHashMap<>();
+    	for (Invoice invoice : invoiceList) {
+    		if (!map.containsKey(invoice.getCreateDate())) {
+    			map.put(invoice.getCreateDate(), 0);
+    		}
+    		map.replace(invoice.getCreateDate(),invoice.getEgressTotal()+map.get(invoice.getCreateDate()));
+    	}
+    	return map;
+
     }
 }
